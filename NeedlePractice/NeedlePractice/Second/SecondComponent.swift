@@ -10,14 +10,15 @@ import UIKit
 import NeedleFoundation
 
 protocol SecondDependency: Dependency {
-    var service: ImageAPI { get }
     var appTitle: String { get }
+    var sharedClass: SharedClass { get }
 }
 
 class SecondComponent: Component<FirstDependency>, SecondBuilder {
-
     var secondVC: UIViewController {
-        return SecondVC()
+        return SecondVC(
+            sharedClass: dependency.sharedClass
+        )
     }
 }
 

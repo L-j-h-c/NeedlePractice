@@ -10,13 +10,12 @@ import UIKit
 import NeedleFoundation
 
 protocol FirstDependency: Dependency {
-    var service: ImageFetchable { get }
+    var sharedClass: SharedClass { get }
 }
 
 class FirstComponent: Component<FirstDependency>, FirstBuilder {
-
     var firstVC: UIViewController {
-        return FirstVC()
+        return FirstVC(sharedClass: dependency.sharedClass)
     }
 }
 

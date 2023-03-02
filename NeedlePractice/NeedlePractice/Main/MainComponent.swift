@@ -7,14 +7,14 @@
 
 import UIKit
 import NeedleFoundation
+import Combine
 
 class MainComponent: BootstrapComponent {
-
     var rootViewController: UIViewController {
         return MainVC(
-            service: service,
             firstBuilder: firstComponent,
-            secondBuilder: secondComponent
+            secondBuilder: secondComponent,
+            sharedClass: sharedClass
         )
     }
 
@@ -26,11 +26,17 @@ class MainComponent: BootstrapComponent {
         return SecondComponent(parent: self)
     }
     
-    var appTitle: String {
-        return "Needle Parctice"
+    var sharedClass: SharedClass {
+        shared { SharedClass() }
+    }
+}
+
+class SharedClass {
+    var sharedValue = 1 {
+        willSet {
+            listerner?(newValue)
+        }
     }
     
-    var service: ImageFetchable {
-        shared { ImageAPI() }
-    }
+    var listerner: ((Int)->Void)?
 }

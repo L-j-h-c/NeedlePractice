@@ -14,15 +14,16 @@ final class MainVC: UIViewController {
     
     // MARK: - Properties
     
-    private let service: ImageFetchable
     private let firstBuilder: FirstBuilder
     private let secondBuilder: SecondBuilder
+    private let sharedClass: SharedClass
     
     // MARK: - UI Components
     
     private lazy var firstButton: UIButton = {
         let bt = UIButton()
         bt.setTitle("첫 번째 페이지", for: .normal)
+        bt.setTitleColor(.black, for: .normal)
         bt.addAction(
             UIAction { [weak self] _ in
                 guard let self else { return }
@@ -36,6 +37,7 @@ final class MainVC: UIViewController {
     private lazy var secondButton: UIButton = {
         let bt = UIButton()
         bt.setTitle("두 번째 페이지", for: .normal)
+        bt.setTitleColor(.black, for: .normal)
         bt.addAction(
             UIAction { [weak self] _ in
                 guard let self else { return }
@@ -46,10 +48,22 @@ final class MainVC: UIViewController {
         return bt
     }()
     
-    init(service: ImageFetchable, firstBuilder: FirstBuilder, secondBuilder: SecondBuilder) {
-        self.service = service
+    private lazy var valueLabel: UILabel = {
+        let label = UILabel()
+        label.text = "공유 값 : \(sharedClass.sharedValue)"
+        label.font = .systemFont(ofSize: 20)
+        label.textColor = .black
+        return label
+    }()
+    
+    init(
+        firstBuilder: FirstBuilder,
+        secondBuilder: SecondBuilder,
+        sharedClass: SharedClass
+    ) {
         self.firstBuilder = firstBuilder
         self.secondBuilder = secondBuilder
+        self.sharedClass = sharedClass
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -59,6 +73,9 @@ final class MainVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
+        self.bind()
+        self.setLayout()
     }
 }
 
@@ -66,7 +83,7 @@ final class MainVC: UIViewController {
 
 extension MainVC {
     private func setLayout() {
-        [firstButton, secondButton].forEach {
+        [firstButton, secondButton, valueLabel].forEach {
             self.view.addSubview($0)
         }
         
@@ -78,6 +95,18 @@ extension MainVC {
         secondButton.snp.makeConstraints { make in
             make.top.equalTo(firstButton.snp.bottom).offset(20)
             make.centerX.equalToSuperview()
+        }
+        
+        valueLabel.snp.makeConstraints { make in
+            make.top.equalTo(secondButton.snp.bottom).offset(20)
+            make.centerX.equalToSuperview()
+        }
+    }
+    
+    private func bind() {
+        self.sharedClass.listerner = { [weak self] sharedValue in
+            guard let self = self else { return }
+            self.valueLabel.text = "공유 값 : \(sharedValue)"
         }
     }
 }
