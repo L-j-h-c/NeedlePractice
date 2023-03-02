@@ -34,9 +34,9 @@ class MainComponent: BootstrapComponent {
 class SharedClass {
     var sharedValue = 1 {
         willSet {
-            listerner?(newValue)
+            listener?(newValue)
         }
     }
     
-    var listerner: ((Int)->Void)?
+    var listener: ((Int)->Void)?
 }

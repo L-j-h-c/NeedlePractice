@@ -104,7 +104,7 @@ extension MainVC {
     }
     
     private func bind() {
-        self.sharedClass.listerner = { [weak self] sharedValue in
+        self.sharedClass.listener = { [weak self] sharedValue in
             guard let self = self else { return }
             self.valueLabel.text = "공유 값 : \(sharedValue)"
         }
